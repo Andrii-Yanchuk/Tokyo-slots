@@ -11,9 +11,7 @@ export function BetControls(props: BetControlsProps) {
 
   return (
     <div className="flex flex-col items-center gap-2">
-      <span className="text-gray-600 text-sm font-medium tracking-wider">
-        PLACE A BET
-      </span>
+      <span className="text text-lg">PLACE A BET</span>
       <div className="flex items-center gap-2">
         <button
           onClick={decrementBet}

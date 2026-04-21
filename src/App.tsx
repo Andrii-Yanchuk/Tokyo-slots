@@ -31,7 +31,7 @@ function App() {
           alt="label"
           className="w-57 h-11.5 relative"
         />
-        <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text">
+        <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text text-[28px]">
           Tokyo Slots
         </p>
       </div>
