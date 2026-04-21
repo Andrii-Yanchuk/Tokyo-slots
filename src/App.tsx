@@ -1,125 +1,24 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import "./App.css";
-import { PAYOUTS, SYMBOLS } from "./data/mockData";
+import { SYMBOLS } from "./data/mockData";
+import { useSlotStore } from "./store/useSlotStore";
 
 function App() {
-  const [balance, setBalance] = useState(100000);
-  const [bet, setBet] = useState(100);
-  const [reels, setReels] = useState(["7", "7", "7", "7"]);
-  const [spinning, setSpinning] = useState(false);
-  const [winAmount, setWinAmount] = useState<number | null>(null);
-  const spinIntervals = useRef<ReturnType<typeof setInterval>[]>([]);
-
-  const incrementBet = () => {
-    if (bet < balance) {
-      setBet((prev) => Math.min(prev + 100, balance));
-    }
-  };
-
-  const decrementBet = () => {
-    if (bet > 100) {
-      setBet((prev) => Math.max(prev - 100, 100));
-    }
-  };
-
-  const checkWin = (symbols: string[]) => {
-    // Count occurrences of each symbol
-    const counts: Record<string, number> = {};
-    symbols.forEach((s) => {
-      counts[s] = (counts[s] || 0) + 1;
-    });
-
-    // Check for wins
-    let winnings = 0;
-
-    // Four of a kind - JACKPOT!
-    const fourOfAKind = Object.entries(counts).find(([, count]) => count === 4);
-    if (fourOfAKind) {
-      if (fourOfAKind[0] === "7") {
-        // Jackpot win!
-        winnings = 100000;
-      } else {
-        winnings = bet * PAYOUTS[fourOfAKind[0]] * 10;
-      }
-    }
-
-    // Three of a kind
-    const threeOfAKind = Object.entries(counts).find(
-      ([, count]) => count === 3,
-    );
-    if (!fourOfAKind && threeOfAKind) {
-      winnings = bet * PAYOUTS[threeOfAKind[0]] * 3;
-    }
-
-    // Two pairs or pair
-    const pairs = Object.entries(counts).filter(([, count]) => count === 2);
-    if (!fourOfAKind && !threeOfAKind) {
-      if (pairs.length === 2) {
-        winnings = bet * 2;
-      } else if (pairs.length === 1) {
-        winnings = bet * 0.5;
-      }
-    }
-
-    if (winnings > 0) {
-      setBalance((prev) => prev + winnings);
-      setWinAmount(winnings);
-    }
-  };
-
-  const spin = useCallback(() => {
-    if (spinning || bet > balance) return;
-
-    setSpinning(true);
-    setWinAmount(null);
-    setBalance((prev) => prev - bet);
-
-    // Clear any existing intervals
-    spinIntervals.current.forEach(clearInterval);
-    spinIntervals.current = [];
-
-    // Start spinning each reel
-    const spinDurations = [1000, 1500, 2000, 2500];
-    const finalSymbols: string[] = [];
-
-    reels.forEach((_, index) => {
-      const interval = setInterval(() => {
-        setReels((prev) => {
-          const newReels = [...prev];
-          newReels[index] = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
-          return newReels;
-        });
-      }, 100);
-
-      spinIntervals.current.push(interval);
-
-      // Stop each reel after its duration
-      setTimeout(() => {
-        clearInterval(interval);
-        const finalSymbol = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
-        finalSymbols[index] = finalSymbol;
-        setReels((prev) => {
-          const newReels = [...prev];
-          newReels[index] = finalSymbol;
-          return newReels;
-        });
-
-        // Check for win after last reel stops
-        if (index === 3) {
-          setTimeout(() => {
-            checkWin(finalSymbols);
-            setSpinning(false);
-          }, 100);
-        }
-      }, spinDurations[index]);
-    });
-  }, [spinning, bet, balance]);
+  const {
+    balance,
+    bet,
+    reels,
+    spinning,
+    winAmount,
+    incrementBet,
+    decrementBet,
+    spin,
+    clearSpinTimers,
+  } = useSlotStore();
 
   useEffect(() => {
-    return () => {
-      spinIntervals.current.forEach(clearInterval);
-    };
-  }, []);
+    return clearSpinTimers;
+  }, [clearSpinTimers]);
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
@@ -137,7 +36,7 @@ function App() {
             {reels.map((symbol, index) => (
               <div
                 key={index}
-                className={`w-16 h-20 bg-gradient-to-b from-gray-50 to-gray-100 rounded-xl flex items-center justify-center text-4xl font-bold shadow-inner border-2 border-gray-200 ${
+                className={`w-16 h-20 bg-linier-to-b from-gray-50 to-gray-100 rounded-xl flex items-center justify-center text-4xl font-bold shadow-inner border-2 border-gray-200 ${
                   spinning ? "animate-pulse" : ""
                 } ${symbol === "7" ? SYMBOLS["7"] : ""}`}
               >
@@ -167,7 +66,7 @@ function App() {
             >
               -
             </button>
-            <div className="bg-orange-400 px-6 py-2 rounded-full min-w-[140px] text-center">
+            <div className="bg-orange-400 px-6 py-2 rounded-full min-w-35 text-center">
               <span className="text-white font-bold">
                 {bet.toLocaleString()}
               </span>
