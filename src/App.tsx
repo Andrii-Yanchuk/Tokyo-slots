@@ -1,6 +1,5 @@
-import { useEffect } from "react";
 import "./App.css";
-import { SYMBOLS } from "./data/mockData";
+import { useEffect } from "react";
 import { useSlotStore } from "./store/useSlotStore";
 
 function App() {
@@ -30,25 +29,33 @@ function App() {
           alt="label"
           className="w-[228px] h-[46px] relative"
         />
-        <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text">
+        <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text">
           Tokyo Slots
-        </span>
+        </p>
       </div>
 
-      <div className="relative z-10 flex flex-col items-center gap-6 max-w-md w-full">
+      <div className="relative flex flex-col items-center gap-6 max-w-md w-full">
         {/* Slot Machine */}
-        <div className="bg-white rounded-2xl p-6 shadow-lg border-4 border-sky-200 w-full">
-          <div className="flex justify-center gap-3">
-            {reels.map((symbol, index) => (
-              <div
-                key={index}
-                className={`w-16 h-20 bg-linier-to-b from-gray-50 to-gray-100 rounded-xl flex items-center justify-center text-4xl font-bold shadow-inner border-2 border-gray-200 ${
-                  spinning ? "animate-pulse" : ""
-                } ${symbol === "7" ? SYMBOLS["7"] : ""}`}
-              >
-                {symbol}
-              </div>
-            ))}
+        <div className="flex items-center ">
+          <div className="relative">
+            <img src="/slot-machine.png" alt="slot machine" />
+            <div className="absolute inset-15 flex justify-center items-center gap-10 -ml-2">
+              {reels.map((symbol, index) => (
+                <div
+                  key={index}
+                  className="w-14 h-24 rounded-xl flex items-center justify-center text-4xl"
+                >
+                  {symbol}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="cursor-pointer h-20 relative -ml-7">
+            <div className="absolute top-0 h-20 w-3 bg-[#0076CC] rounded-r-xs border border-[#341D1A]"></div>
+            <div className="absolute top-5 left-3 h-9 w-4 bg-[#0076CC] rounded-r-xs border border-[#341D1A] border-l-0"></div>
+            <div className="absolute -top-4 left-4 h-12 w-1.5 bg-[#9CDEFA] rounded-xs border border-[#341D1A] "></div>
+            <div className="absolute -top-7 left-2 h-6 w-6 bg-[#EE4AA6] rounded-full border-2 border-[#341D1A] "></div>
           </div>
         </div>
 
