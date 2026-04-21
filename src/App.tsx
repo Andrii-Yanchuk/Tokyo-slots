@@ -21,15 +21,19 @@ function App() {
   }, [clearSpinTimers]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-      <div className="flex flex-col items-center gap-6 max-w-md w-full">
-        {/* Title */}
-        <div className="bg-orange-400 px-8 py-3 rounded-full shadow-lg">
-          <h1 className="text-white font-bold text-xl tracking-wider flex items-center gap-2">
-            🎰 TOKYO SLOTS
-          </h1>
-        </div>
-
+    <div className="min-h-screen flex items-center justify-center p-4 pt-20 relative overflow-hidden">
+      <div className="zigzag"></div>
+      <div className="absolute top-17">
+        <img
+          src="/public/label.webp"
+          alt="label"
+          className="w-85 h-17 relative"
+        />
+        <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text">
+          Tokyo Slots
+        </span>
+      </div>
+      <div className="relative z-10 flex flex-col items-center gap-6 max-w-md w-full">
         {/* Slot Machine */}
         <div className="bg-white rounded-2xl p-6 shadow-lg border-4 border-sky-200 w-full">
           <div className="flex justify-center gap-3">
