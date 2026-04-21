@@ -16,8 +16,9 @@
   --sans: system-ui, "Segoe UI", Roboto, sans-serif;
   --heading: system-ui, "Segoe UI", Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
+  --poetsen: "Poetsen One", sans-serif;
 
-  font: 18px/145% var(--sans);
+  font: 18px/145% var(--poetsen);
   letter-spacing: 0.18px;
   color-scheme: light dark;
   color: var(--text);
@@ -33,12 +34,14 @@
 }
 
 #root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
+  width: 100%;
   text-align: center;
   min-height: 100svh;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+}
+
+body {
+  margin: 0;
 }
