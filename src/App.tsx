@@ -36,10 +36,10 @@ function App() {
 
       <div className="relative flex flex-col items-center gap-6 max-w-md w-full">
         {/* Slot Machine */}
-        <div className="flex items-center ">
+        <div className="flex items-center px-5">
           <div className="relative">
             <img src="/slot-machine.png" alt="slot machine" />
-            <div className="absolute inset-15 flex justify-center items-center gap-10 -ml-2">
+            <div className="absolute top-15 right-10 flex justify-center items-center gap-4 -ml-2">
               {reels.map((symbol, index) => (
                 <div
                   key={index}
