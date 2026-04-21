@@ -22,17 +22,19 @@ function App() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 pt-20 relative overflow-hidden">
+      {/* Top Label */}
       <div className="zigzag"></div>
       <div className="absolute top-17">
         <img
           src="/public/label.webp"
           alt="label"
-          className="w-85 h-17 relative"
+          className="w-[228px] h-[46px] relative"
         />
         <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text">
           Tokyo Slots
         </span>
       </div>
+
       <div className="relative z-10 flex flex-col items-center gap-6 max-w-md w-full">
         {/* Slot Machine */}
         <div className="bg-white rounded-2xl p-6 shadow-lg border-4 border-sky-200 w-full">
