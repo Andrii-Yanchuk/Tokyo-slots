@@ -5,6 +5,7 @@ import { SlotMachine } from "./components/SlotMachine";
 import { BetControls } from "./components/BetControls";
 import { Balance } from "./components/Balance";
 import { SpinButton } from "./components/SpinButton";
+import { ResultModal } from "./components/ResultModal";
 
 function App() {
   const {
@@ -13,15 +14,30 @@ function App() {
     reels,
     spinning,
     winAmount,
+    loseAmount,
     incrementBet,
     decrementBet,
     spin,
     clearSpinTimers,
+    clearResult,
   } = useSlotStore();
+  const isResultModalOpen = winAmount !== null || loseAmount !== null;
 
   useEffect(() => {
     return clearSpinTimers;
   }, [clearSpinTimers]);
+
+  useEffect(() => {
+    if (!isResultModalOpen) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      clearResult();
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [clearResult, isResultModalOpen]);
 
   return (
     <div className="relative flex min-h-screen justify-center overflow-hidden p-4">
@@ -33,12 +49,6 @@ function App() {
       <div className="relative flex w-full max-w-md mt-34 flex-col items-center gap-6 ">
         <SlotMachine reels={reels} />
 
-        {winAmount !== null && (
-          <div className="text-green-600 font-bold text-xl animate-bounce">
-            WIN: {winAmount.toLocaleString()}
-          </div>
-        )}
-
         <BetControls
           decrementBet={decrementBet}
           incrementBet={incrementBet}
@@ -46,7 +56,6 @@ function App() {
           spinning={spinning}
           balance={balance}
         />
-
         <SpinButton
           spin={spin}
           spinning={spinning}
@@ -56,6 +65,10 @@ function App() {
       </div>
 
       <Balance balance={balance} />
+
+      {isResultModalOpen && (
+        <ResultModal winAmount={winAmount} loseAmount={loseAmount} />
+      )}
     </div>
   );
 }

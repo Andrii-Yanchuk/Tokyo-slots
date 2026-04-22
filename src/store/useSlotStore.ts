@@ -13,16 +13,20 @@ type SlotStore = {
   reels: string[];
   spinning: boolean;
   winAmount: number | null;
+  loseAmount: number | null;
+  totalLost: number;
   incrementBet: () => void;
   decrementBet: () => void;
   getWinnings: (symbols: string[]) => number;
   spin: () => void;
   clearSpinTimers: () => void;
+  clearResult: () => void;
   setBalance: (value: number | ((prev: number) => number)) => void;
   setBet: (value: number | ((prev: number) => number)) => void;
   setReels: (value: string[] | ((prev: string[]) => string[])) => void;
   setSpinning: (value: boolean) => void;
   setWinAmount: (value: number | null) => void;
+  setLoseAmount: (value: number | null) => void;
 };
 
 export const useSlotStore = create<SlotStore>((set, get) => ({
@@ -31,6 +35,8 @@ export const useSlotStore = create<SlotStore>((set, get) => ({
   reels: ["7", "7", "7", "7"],
   spinning: false,
   winAmount: null,
+  loseAmount: null,
+  totalLost: 0,
   incrementBet: () =>
     set((state) => ({
       bet:
@@ -88,6 +94,7 @@ export const useSlotStore = create<SlotStore>((set, get) => ({
       balance: state.balance - state.bet,
       spinning: true,
       winAmount: null,
+      loseAmount: null,
     }));
 
     spinInterval = setInterval(() => {
@@ -119,10 +126,13 @@ export const useSlotStore = create<SlotStore>((set, get) => ({
         clearSpinTimers();
 
         const winnings = getWinnings(finalSymbols);
+        const loseAmount = Math.max(bet - winnings, 0);
         set((state) => ({
           balance: winnings > 0 ? state.balance + winnings : state.balance,
           spinning: false,
           winAmount: winnings > 0 ? winnings : null,
+          loseAmount: loseAmount > 0 ? loseAmount : null,
+          totalLost: state.totalLost + loseAmount,
         }));
       }, duration),
     );
@@ -136,6 +146,11 @@ export const useSlotStore = create<SlotStore>((set, get) => ({
     stopTimeouts.forEach(clearTimeout);
     stopTimeouts = [];
   },
+  clearResult: () =>
+    set({
+      winAmount: null,
+      loseAmount: null,
+    }),
   setBalance: (value) =>
     set((state) => ({
       balance: typeof value === "function" ? value(state.balance) : value,
@@ -150,4 +165,5 @@ export const useSlotStore = create<SlotStore>((set, get) => ({
     })),
   setSpinning: (value) => set({ spinning: value }),
   setWinAmount: (value) => set({ winAmount: value }),
+  setLoseAmount: (value) => set({ loseAmount: value }),
 }));

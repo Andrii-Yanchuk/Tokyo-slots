@@ -4,6 +4,7 @@ interface BalanceProps {
 
 export function Balance(props: BalanceProps) {
   const { balance } = props;
+
   return (
     <div className="pointer-events-none absolute inset-x-0 bottom-0 h-67.5 bg-[url('/cloud-mob.png')] bg-no-repeat bg-center bg-size-[100%_100%]">
       <p className="z-10 absolute left-1/2 -translate-x-1/2 bottom-14 text text-[#FFC434] text-4xl">
