@@ -23,13 +23,13 @@ function App() {
   }, [clearSpinTimers]);
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden p-4 pt-20">
+    <div className="relative flex min-h-screen justify-center overflow-hidden p-4">
       <div className="zigzag"></div>
       <div className="absolute left-0 top-15 flex h-20 w-full items-center justify-center bg-[url('/label.webp')] bg-contain bg-center bg-no-repeat">
         <p className="text text-[#a5dff7] text-[28px]">Tokyo Slots</p>
       </div>
 
-      <div className="relative flex w-full max-w-md flex-col items-center gap-6">
+      <div className="relative flex w-full max-w-md mt-34 flex-col items-center gap-6 ">
         <SlotMachine reels={reels} />
 
         {winAmount !== null && (

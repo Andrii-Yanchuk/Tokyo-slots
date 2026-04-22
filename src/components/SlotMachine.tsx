@@ -4,17 +4,8 @@ interface SlotMachineProps {
 
 export function SlotMachine({ reels }: SlotMachineProps) {
   return (
-    <div className="flex items-center px-5">
-      {/* машина як background */}
-      <div
-        className="
-          relative
-          w-75 h-65  /* підстав свій реальний розмір */
-          bg-[url('/slot-machine.png')]
-          bg-no-repeat bg-contain bg-center
-        "
-      >
-        {/* символи */}
+    <div className="flex items-center mr-6">
+      <div className=" relative w-75 h-65 bg-[url('/slot-machine.png')] bg-no-repeat bg-contain bg-center">
         <div className="absolute top-20 left-1/2 -translate-x-1/2 flex gap-1">
           {reels.map((symbol, index) => (
             <div
@@ -27,7 +18,6 @@ export function SlotMachine({ reels }: SlotMachineProps) {
         </div>
       </div>
 
-      {/* ричаг */}
       <div className="cursor-pointer h-20 relative -ml-5">
         <div className="absolute top-0 h-20 w-3 bg-[#0076CC] border border-[#341D1A]" />
         <div className="absolute top-5 left-3 h-9 w-4 bg-[#0076CC] border border-[#341D1A] border-l-0" />
