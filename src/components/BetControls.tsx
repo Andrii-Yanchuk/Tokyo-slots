@@ -21,18 +21,14 @@ export function BetControls(props: BetControlsProps) {
           -
         </button>
 
-        <div className="relative">
-          <img src="/bet-place.png" alt="bet place" />
-
-          <div className="absolute top-7 left-0 w-full flex items-center justify-between px-4">
-            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#FF315F] text-black font-black text-sm border-[5px] border-[#341D1A] shadow-[0_4px_0_#5B5354]">
-              T
-            </div>
-
-            <span className="text-[20px] leading-none font-black text-white [text-shadow:0_4px_0_#1F1F1F]">
-              {bet.toLocaleString()}
-            </span>
+        <div className="relative w-[190px] h-[56px] bg-[url('/bet-place.png')] bg-no-repeat bg-center bg-[length:100%_100%] flex items-center justify-between px-4">
+          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#FF315F] text-black font-black text-sm border-[5px] border-[#341D1A] shadow-[0_4px_0_#5B5354]">
+            T
           </div>
+
+          <span className="text-[20px] leading-none font-black text-white [text-shadow:0_4px_0_#1F1F1F]">
+            {bet.toLocaleString()}
+          </span>
         </div>
 
         <button

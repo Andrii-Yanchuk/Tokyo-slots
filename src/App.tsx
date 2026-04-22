@@ -25,15 +25,8 @@ function App() {
     <div className="min-h-screen flex items-center justify-center p-4 pt-20 relative overflow-hidden">
       {/* Top Label */}
       <div className="zigzag"></div>
-      <div className="absolute top-17">
-        <img
-          src="/public/label.webp"
-          alt="label"
-          className="w-57 h-11.5 relative"
-        />
-        <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text text-[28px]">
-          Tokyo Slots
-        </p>
+      <div className="absolute top-15 left-0 w-full h-20 bg-[url('/label.webp')] bg-no-repeat bg-center bg-contain flex items-center justify-center">
+        <p className="text text-[28px]">Tokyo Slots</p>
       </div>
 
       <div className="relative flex flex-col items-center gap-6 max-w-md w-full">
