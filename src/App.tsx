@@ -4,6 +4,7 @@ import { useSlotStore } from "./store/useSlotStore";
 import { SlotMachine } from "./components/SlotMachine";
 import { BetControls } from "./components/BetControls";
 import { Balance } from "./components/Balance";
+import { SpinButton } from "./components/SpinButton";
 
 function App() {
   const {
@@ -46,13 +47,12 @@ function App() {
           balance={balance}
         />
 
-        <button
-          onClick={spin}
-          disabled={spinning || bet > balance}
-          className="bg-orange-400 hover:bg-orange-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold text-xl px-16 py-4 rounded-full shadow-lg transform hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
-        >
-          <span>SPIN</span>
-        </button>
+        <SpinButton
+          spin={spin}
+          spinning={spinning}
+          bet={bet}
+          balance={balance}
+        />
       </div>
 
       <Balance balance={balance} />
