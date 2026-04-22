@@ -87,3 +87,18 @@
     transform: rotate(360deg) scale(1);
   }
 }
+
+@keyframes lever-pull {
+  0% {
+    transform: translateY(0) scaleY(1);
+  }
+  40% {
+    transform: translateY(22px) scaleY(0.1);
+  }
+  60% {
+    transform: translateY(16px) scaleY(0.2);
+  }
+  100% {
+    transform: translateY(0) scaleY(1);
+  }
+}

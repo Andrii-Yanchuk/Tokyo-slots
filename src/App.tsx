@@ -47,7 +47,7 @@ function App() {
       </div>
 
       <div className="relative flex w-full max-w-md mt-34 flex-col items-center gap-6 ">
-        <SlotMachine reels={reels} />
+        <SlotMachine reels={reels} spin={spin} spinning={spinning} />
 
         <BetControls
           decrementBet={decrementBet}
