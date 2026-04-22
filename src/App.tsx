@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useSlotStore } from "./store/useSlotStore";
 import { SlotMachine } from "./components/SlotMachine";
 import { BetControls } from "./components/BetControls";
+import { Balance } from "./components/Balance";
 
 function App() {
   const {
@@ -22,24 +23,21 @@ function App() {
   }, [clearSpinTimers]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 pt-20 relative overflow-hidden">
-      {/* Top Label */}
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden p-4 pt-20">
       <div className="zigzag"></div>
-      <div className="absolute top-15 left-0 w-full h-20 bg-[url('/label.webp')] bg-no-repeat bg-center bg-contain flex items-center justify-center">
-        <p className="text text-[28px]">Tokyo Slots</p>
+      <div className="absolute left-0 top-15 flex h-20 w-full items-center justify-center bg-[url('/label.webp')] bg-contain bg-center bg-no-repeat">
+        <p className="text text-[#a5dff7] text-[28px]">Tokyo Slots</p>
       </div>
 
-      <div className="relative flex flex-col items-center gap-6 max-w-md w-full">
+      <div className="relative flex w-full max-w-md flex-col items-center gap-6">
         <SlotMachine reels={reels} />
 
-        {/* Win display */}
         {winAmount !== null && (
           <div className="text-green-600 font-bold text-xl animate-bounce">
-            🎉 WIN: {winAmount.toLocaleString()} 🎉
+            WIN: {winAmount.toLocaleString()}
           </div>
         )}
 
-        {/* Bet Controls */}
         <BetControls
           decrementBet={decrementBet}
           incrementBet={incrementBet}
@@ -48,21 +46,16 @@ function App() {
           balance={balance}
         />
 
-        {/* Spin Button */}
         <button
           onClick={spin}
           disabled={spinning || bet > balance}
           className="bg-orange-400 hover:bg-orange-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold text-xl px-16 py-4 rounded-full shadow-lg transform hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
         >
-          <span>🎰</span> SPIN
+          <span>SPIN</span>
         </button>
-
-        {/* Balance */}
-        <div className="text-gray-600 font-medium">
-          Balance:{" "}
-          <span className="text-amber-600">💰 {balance.toLocaleString()}</span>
-        </div>
       </div>
+
+      <Balance balance={balance} />
     </div>
   );
 }

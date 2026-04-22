@@ -9,13 +9,13 @@ export function SlotMachine({ reels }: SlotMachineProps) {
       <div
         className="
           relative
-          w-[300px] h-[260px]   /* підстав свій реальний розмір */
+          w-75 h-65  /* підстав свій реальний розмір */
           bg-[url('/slot-machine.png')]
           bg-no-repeat bg-contain bg-center
         "
       >
         {/* символи */}
-        <div className="absolute top-[80px] left-1/2 -translate-x-1/2 flex gap-1">
+        <div className="absolute top-20 left-1/2 -translate-x-1/2 flex gap-1">
           {reels.map((symbol, index) => (
             <div
               key={index}
