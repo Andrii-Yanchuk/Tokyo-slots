@@ -80,7 +80,7 @@ function App() {
   }, [clearResult, isClosingResultModal]);
 
   return (
-    <div className="relative flex flex-col justify-center">
+    <div className="relative flex flex-col justify-center h-dvh">
       <div className="zigzag"></div>
       <div className="absolute left-1/2 -translate-x-1/2 top-12 flex h-20 w-full max-w-93.75 items-center justify-center bg-[url('/label.webp')] bg-contain bg-center bg-no-repeat lg:top-12">
         <p className="text text-[#a5dff7] text-[28px] sm:text-5xl">

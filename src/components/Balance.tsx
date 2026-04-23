@@ -8,7 +8,7 @@ export function Balance(props: BalanceProps) {
   return (
     <footer className="relative mt-auto flex h-50 w-full flex-col items-center justify-end md:h-60">
       {/* 🌆 МІСТО (нижче) */}
-      <div className="hidden md:block absolute bottom-20 w-full h-60 bg-[url('/tokiocity.svg')] bg-size-[100%_100%] bg-repeat lg:h-80 pointer-events-none" />
+      <div className="hidden md:block absolute bottom-0 w-full h-60 bg-[url('/tokiocity.svg')] bg-size-[100%_100%] bg-repeat sm:bottom-20 lg:h-80 lg::bottom-27 pointer-events-none " />
 
       {/* ☁️ ХМАРИ (вище) */}
       <div className="absolute inset-0 bg-[url('/cloud-mob.png')] bg-size-[100%_100%] bg-center bg-no-repeat z-10 md:bg-[url('/cloud-dt.png')] pointer-events-none" />
