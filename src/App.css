@@ -192,6 +192,21 @@
   }
 }
 
+@keyframes decor-float {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(var(--float-rotate, 0deg));
+  }
+
+  50% {
+    transform: translate3d(0, calc(var(--float-offset, 28px) * -1), 0)
+      rotate(var(--float-rotate, 0deg));
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0) rotate(var(--float-rotate, 0deg));
+  }
+}
+
 @keyframes lever-pull {
   0% {
     transform: translateY(0) scaleY(1);

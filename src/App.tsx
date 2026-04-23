@@ -6,6 +6,7 @@ import { BetControls } from "./components/BetControls";
 import { Balance } from "./components/Balance";
 import { SpinButton } from "./components/SpinButton";
 import { ResultModal } from "./components/ResultModal";
+import { ReelDecor } from "./components/ReelDecor";
 
 const RESULT_POPUP_DELAY_MS = 500;
 const RESULT_POPUP_VISIBLE_MS = 2000;
@@ -96,6 +97,8 @@ function App() {
           spin={spin}
           spinning={spinning}
         />
+
+        <ReelDecor />
 
         <BetControls
           decrementBet={decrementBet}
