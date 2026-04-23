@@ -1,23 +1,74 @@
+import { REEL_SYMBOLS, type ReelSymbol } from "../data/mockData";
+
 interface SlotMachineProps {
-  reels: string[];
+  reels: ReelSymbol[];
+  spinningReels: boolean[];
+  settlingReels: boolean[];
   spin: () => void;
   spinning: boolean;
 }
 
+const reelWindowClassName =
+  "relative flex h-21 w-14 items-center justify-center overflow-hidden";
+const reelStripClassName =
+  "absolute left-0 top-0 w-full animate-[slot-reel-spin_280ms_linear_infinite] [filter:blur(0.8px)] [will-change:transform,filter]";
+const reelSymbolClassName =
+  "flex h-24 w-14 flex-[0_0_6rem] items-center justify-center text-4xl leading-none";
+const reelImageClassName =
+  "h-10 w-10 object-contain select-none pointer-events-none";
+const reelBounceClassName =
+  "animate-[slot-reel-bounce_520ms_cubic-bezier(0.18,0.9,0.24,1.2)] [transform-origin:center_bottom]";
+
+function ReelSymbolImage({ symbol }: { symbol: ReelSymbol }) {
+  return (
+    <img
+      className={reelImageClassName}
+      src={symbol.imageSrc}
+      alt=""
+      draggable={false}
+    />
+  );
+}
+
 export function SlotMachine(props: SlotMachineProps) {
-  const { reels, spin, spinning } = props;
+  const { reels, spinningReels, settlingReels, spin, spinning } = props;
 
   const rodHeight = spinning ? 0 : 48;
   return (
     <div className="flex items-center">
       <div className=" relative w-75 h-65 bg-[url('/slot-machine.png')] bg-no-repeat bg-contain bg-center">
-        <div className="absolute top-20 left-1/2 -translate-x-1/2 flex gap-1">
+        <div className="absolute top-22 left-1/2 -translate-x-1/2 flex gap-1">
           {reels.map((symbol, index) => (
-            <div
-              key={index}
-              className="w-14 h-24 flex items-center justify-center text-4xl"
-            >
-              {symbol}
+            <div key={`${symbol.id}-${index}`} className={reelWindowClassName}>
+              {spinningReels[index] ? (
+                <div
+                  className={reelStripClassName}
+                  style={{
+                    animationDelay: `${index * -80}ms`,
+                    animationDuration: `${260 + index * 25}ms`,
+                  }}
+                >
+                  {REEL_SYMBOLS.map((stripSymbol, symbolIndex) => (
+                    <div
+                      key={`${stripSymbol.id}-${symbolIndex}`}
+                      className={reelSymbolClassName}
+                    >
+                      <ReelSymbolImage symbol={stripSymbol} />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div
+                  className={`${reelSymbolClassName} ${
+                    settlingReels[index] ? reelBounceClassName : ""
+                  }`}
+                  style={{
+                    animationDuration: `${480 + index * 35}ms`,
+                  }}
+                >
+                  <ReelSymbolImage symbol={symbol} />
+                </div>
+              )}
             </div>
           ))}
         </div>

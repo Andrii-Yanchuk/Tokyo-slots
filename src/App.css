@@ -88,6 +88,38 @@
   }
 }
 
+@keyframes slot-reel-spin {
+  from {
+    transform: translateY(-66.666%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slot-reel-bounce {
+  0% {
+    transform: translateY(-14px) scaleY(1.12) scaleX(0.96);
+  }
+
+  38% {
+    transform: translateY(7px) scaleY(0.9) scaleX(1.08);
+  }
+
+  60% {
+    transform: translateY(-5px) scaleY(1.06) scaleX(0.98);
+  }
+
+  78% {
+    transform: translateY(2px) scaleY(0.97) scaleX(1.02);
+  }
+
+  100% {
+    transform: translateY(0) scaleY(1) scaleX(1);
+  }
+}
+
 @keyframes lever-pull {
   0% {
     transform: translateY(0) scaleY(1);
