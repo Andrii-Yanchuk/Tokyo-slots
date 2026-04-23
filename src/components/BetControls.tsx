@@ -21,7 +21,7 @@ export function BetControls(props: BetControlsProps) {
           -
         </button>
 
-        <div className="relative w-47.5 h-14 bg-[url('/bet-place.png')] bg-no-repeat bg-center bg-size-[100%_100%] flex items-center justify-between px-4">
+        <div className="relative w-47.5 h-14 bg-[url('/bet-place.png')] bg-no-repeat bg-center bg-size-[100%_100%] flex items-center justify-between px-4 md:h-16">
           <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#FF315F] text-black font-black text-sm border-[5px] border-[#341D1A] shadow-[0_4px_0_#5B5354]">
             T
           </div>

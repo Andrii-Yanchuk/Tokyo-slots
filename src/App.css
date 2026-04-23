@@ -1,9 +1,9 @@
 .zigzag {
   position: absolute;
   top: 0;
-  left: 50%;
-  width: 100vw;
-  transform: translateX(-50%);
+  left: 0;
+  right: 0;
+  width: 100%;
   background: #fff6de;
   height: 100px;
   z-index: 0;
@@ -59,7 +59,6 @@
   font-weight: 800;
   line-height: 106%;
   letter-spacing: 3.5%;
-  width: 172px;
   -webkit-text-stroke: 1.5px black;
 }
 
