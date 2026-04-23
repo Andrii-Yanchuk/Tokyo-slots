@@ -1,10 +1,13 @@
+import {
+  BALANCE_DECOR_IMAGE_SRC,
+  BALANCE_MOBILE_DECOR,
+} from "../data/mockData";
+
 interface BalanceProps {
   balance: number;
 }
 
-export function Balance(props: BalanceProps) {
-  const { balance } = props;
-
+export function Balance({ balance }: BalanceProps) {
   return (
     <footer className="relative mt-auto flex h-50 w-full flex-col items-center justify-end md:h-60">
       <div className="hidden md:block absolute bottom-0 w-full h-60 bg-[url('/tokiocity.svg')] bg-size-[100%_100%] bg-repeat sm:bottom-20 lg:h-80 lg::bottom-27 pointer-events-none " />
@@ -15,41 +18,14 @@ export function Balance(props: BalanceProps) {
         <p className="text text-4xl text-[#FFC434] -mb-4 z-20">Balance</p>
 
         <div className="md:hidden">
-          <img
-            src="/reels/sdsssd.png"
-            alt="decor image"
-            className="absolute h-11 w-11 bottom-4 -left-2"
-          />
-          <img
-            src="/reels/sdsssd.png"
-            alt="decor image"
-            className="absolute h-6 w-6 bottom-15 -left-11 rotate-60"
-          />
-          <img
-            src="/reels/sdsssd.png"
-            alt="decor image"
-            className="absolute h-16 w-16 bottom-22 -left-18 rotate-90"
-          />
-          <img
-            src="/reels/sdsssd.png"
-            alt="decor image"
-            className="absolute -z-20 h-6 w-6 bottom-20 left-14 rotate-90"
-          />
-          <img
-            src="/reels/sdsssd.png"
-            alt="decor image"
-            className="absolute h-5 w-5 bottom-25 right-15 rotate-120"
-          />
-          <img
-            src="/reels/sdsssd.png"
-            alt="decor image"
-            className="absolute h-9 w-9 bottom-5 right-0 rotate-280"
-          />
-          <img
-            src="/reels/sdsssd.png"
-            alt="decor image"
-            className="absolute h-9 w-9 bottom-25 -right-13 rotate-160"
-          />
+          {BALANCE_MOBILE_DECOR.map((className) => (
+            <img
+              key={className}
+              src={BALANCE_DECOR_IMAGE_SRC}
+              alt="decor image"
+              className={className}
+            />
+          ))}
         </div>
 
         <div className="flex h-19 w-62.5 items-center justify-center gap-2 bg-[url('/balance-bg.png')] bg-size-[100%_100%] bg-center bg-no-repeat">

@@ -5,6 +5,27 @@ export type ReelSymbol = {
   jackpot?: number;
 };
 
+export const INITIAL_BALANCE = 1000;
+export const MIN_BET = 100;
+export const SPIN_STEP_MS = 100;
+export const REEL_STOP_DELAYS = [1000, 1500, 2000, 2500];
+export const SETTLE_DURATION_MS = 520;
+export const RESULT_POPUP_TIMINGS = {
+  delay: 500,
+  visible: 2000,
+  exit: 220,
+};
+export const BALANCE_DECOR_IMAGE_SRC = "/reels/sdsssd.png";
+export const BALANCE_MOBILE_DECOR = [
+  "absolute h-11 w-11 bottom-4 -left-2",
+  "absolute h-6 w-6 bottom-15 -left-11 rotate-60",
+  "absolute h-16 w-16 bottom-22 -left-18 rotate-90",
+  "absolute -z-20 h-6 w-6 bottom-20 left-14 rotate-90",
+  "absolute h-5 w-5 bottom-25 right-15 rotate-120",
+  "absolute h-9 w-9 bottom-5 right-0 rotate-280",
+  "absolute h-9 w-9 bottom-25 -right-13 rotate-160",
+];
+
 export const REEL_SYMBOLS: ReelSymbol[] = [
   {
     id: "seven",

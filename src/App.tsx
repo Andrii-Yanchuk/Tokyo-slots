@@ -7,78 +7,56 @@ import { Balance } from "./components/Balance";
 import { SpinButton } from "./components/SpinButton";
 import { ResultModal } from "./components/ResultModal";
 import { ReelDecor } from "./components/ReelDecor";
+import { RESULT_POPUP_TIMINGS } from "./data/mockData";
 
-const RESULT_POPUP_DELAY_MS = 500;
-const RESULT_POPUP_VISIBLE_MS = 2000;
-const RESULT_POPUP_EXIT_MS = 220;
+type ResultModalPhase = "visible" | "closing" | null;
 
 function App() {
   const {
     balance,
     bet,
     reels,
-    spinningReels,
-    settlingReels,
+    reelPhases,
     spinning,
-    winAmount,
-    loseAmount,
+    result,
     incrementBet,
     decrementBet,
     spin,
-    clearSpinTimers,
+    cleanup,
     clearResult,
   } = useSlotStore();
-  const [showResultModal, setShowResultModal] = useState(false);
-  const [isClosingResultModal, setIsClosingResultModal] = useState(false);
-  const isResultModalOpen = winAmount !== null || loseAmount !== null;
+  const [resultModalPhase, setResultModalPhase] =
+    useState<ResultModalPhase>(null);
 
   useEffect(() => {
-    return clearSpinTimers;
-  }, [clearSpinTimers]);
+    return cleanup;
+  }, [cleanup]);
 
   useEffect(() => {
-    if (!isResultModalOpen) {
-      const timer = setTimeout(() => {
-        setShowResultModal(false);
-        setIsClosingResultModal(false);
-      }, 0);
-
-      return () => clearTimeout(timer);
-    }
-
-    const timer = setTimeout(() => {
-      setShowResultModal(true);
-      setIsClosingResultModal(false);
-    }, RESULT_POPUP_DELAY_MS);
-
-    return () => clearTimeout(timer);
-  }, [isResultModalOpen]);
-
-  useEffect(() => {
-    if (!showResultModal) {
+    if (!result) {
       return;
     }
 
-    const timer = setTimeout(() => {
-      setIsClosingResultModal(true);
-    }, RESULT_POPUP_VISIBLE_MS);
+    const timeouts = [
+      setTimeout(() => {
+        setResultModalPhase("visible");
+      }, RESULT_POPUP_TIMINGS.delay),
+      setTimeout(() => {
+        setResultModalPhase("closing");
+      }, RESULT_POPUP_TIMINGS.delay + RESULT_POPUP_TIMINGS.visible),
+      setTimeout(
+        () => {
+          setResultModalPhase(null);
+          clearResult();
+        },
+        RESULT_POPUP_TIMINGS.delay +
+          RESULT_POPUP_TIMINGS.visible +
+          RESULT_POPUP_TIMINGS.exit,
+      ),
+    ];
 
-    return () => clearTimeout(timer);
-  }, [clearResult, showResultModal]);
-
-  useEffect(() => {
-    if (!isClosingResultModal) {
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      setShowResultModal(false);
-      setIsClosingResultModal(false);
-      clearResult();
-    }, RESULT_POPUP_EXIT_MS);
-
-    return () => clearTimeout(timer);
-  }, [clearResult, isClosingResultModal]);
+    return () => timeouts.forEach(clearTimeout);
+  }, [clearResult, result]);
 
   return (
     <div className="relative flex flex-col justify-center h-dvh">
@@ -92,8 +70,7 @@ function App() {
       <div className="relative flex w-full mt-34 flex-col items-center gap-6 ">
         <SlotMachine
           reels={reels}
-          spinningReels={spinningReels}
-          settlingReels={settlingReels}
+          reelPhases={reelPhases}
           spin={spin}
           spinning={spinning}
         />
@@ -117,11 +94,10 @@ function App() {
 
       <Balance balance={balance} />
 
-      {showResultModal && (
+      {result && resultModalPhase && (
         <ResultModal
-          isClosing={isClosingResultModal}
-          winAmount={winAmount}
-          loseAmount={loseAmount}
+          isClosing={resultModalPhase === "closing"}
+          result={result}
         />
       )}
     </div>
