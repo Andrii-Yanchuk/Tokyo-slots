@@ -13,7 +13,7 @@ function ReelSymbolImage({ symbol }: { symbol: ReelSymbol }) {
     <img
       className="h-10 w-10 object-contain select-none pointer-events-none md:w-15 md:h-15"
       src={symbol.imageSrc}
-      alt=""
+      alt="reel symbol"
       draggable={false}
     />
   );
@@ -35,7 +35,7 @@ export function SlotMachine(props: SlotMachineProps) {
             >
               {spinningReels[index] ? (
                 <div
-                  className="absolute inset-x-0 top-0 w-full animate-[slot-reel-spin_280ms_linear_infinite] [filter:blur(0.8px)] [will-change:transform,filter]"
+                  className="absolute inset-x-0 top-0 w-full animate-[slot-reel-spin_280ms_linear_infinite] filter-[blur(0.8px)] will-change-[transform,filter]"
                   style={{
                     animationDelay: `${index * -80}ms`,
                     animationDuration: `${260 + index * 25}ms`,
@@ -54,7 +54,7 @@ export function SlotMachine(props: SlotMachineProps) {
                 <div
                   className={`flex h-21 w-full items-center justify-center leading-none md:h-30 ${
                     settlingReels[index]
-                      ? "animate-[slot-reel-bounce_520ms_cubic-bezier(0.18,0.9,0.24,1.2)] [transform-origin:center_bottom]"
+                      ? "animate-[slot-reel-bounce_520ms_cubic-bezier(0.18,0.9,0.24,1.2)] origin-[center_bottom]"
                       : ""
                   }`}
                   style={{

@@ -9,6 +9,7 @@ import { ResultModal } from "./components/ResultModal";
 
 const RESULT_POPUP_DELAY_MS = 500;
 const RESULT_POPUP_VISIBLE_MS = 2000;
+const RESULT_POPUP_EXIT_MS = 220;
 
 function App() {
   const {
@@ -27,6 +28,7 @@ function App() {
     clearResult,
   } = useSlotStore();
   const [showResultModal, setShowResultModal] = useState(false);
+  const [isClosingResultModal, setIsClosingResultModal] = useState(false);
   const isResultModalOpen = winAmount !== null || loseAmount !== null;
 
   useEffect(() => {
@@ -37,6 +39,7 @@ function App() {
     if (!isResultModalOpen) {
       const timer = setTimeout(() => {
         setShowResultModal(false);
+        setIsClosingResultModal(false);
       }, 0);
 
       return () => clearTimeout(timer);
@@ -44,6 +47,7 @@ function App() {
 
     const timer = setTimeout(() => {
       setShowResultModal(true);
+      setIsClosingResultModal(false);
     }, RESULT_POPUP_DELAY_MS);
 
     return () => clearTimeout(timer);
@@ -55,11 +59,25 @@ function App() {
     }
 
     const timer = setTimeout(() => {
-      clearResult();
+      setIsClosingResultModal(true);
     }, RESULT_POPUP_VISIBLE_MS);
 
     return () => clearTimeout(timer);
   }, [clearResult, showResultModal]);
+
+  useEffect(() => {
+    if (!isClosingResultModal) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setShowResultModal(false);
+      setIsClosingResultModal(false);
+      clearResult();
+    }, RESULT_POPUP_EXIT_MS);
+
+    return () => clearTimeout(timer);
+  }, [clearResult, isClosingResultModal]);
 
   return (
     <div className="relative flex flex-col justify-center">
@@ -96,8 +114,12 @@ function App() {
 
       <Balance balance={balance} />
 
-      {showResultModal && isResultModalOpen && (
-        <ResultModal winAmount={winAmount} loseAmount={loseAmount} />
+      {showResultModal && (
+        <ResultModal
+          isClosing={isClosingResultModal}
+          winAmount={winAmount}
+          loseAmount={loseAmount}
+        />
       )}
     </div>
   );
