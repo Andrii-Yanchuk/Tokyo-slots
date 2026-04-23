@@ -1,97 +1,107 @@
 import { create } from "zustand";
-import { REEL_SYMBOLS, type ReelSymbol } from "../data/mockData";
+import {
+  INITIAL_BALANCE,
+  MIN_BET,
+  REEL_STOP_DELAYS,
+  REEL_SYMBOLS,
+  SETTLE_DURATION_MS,
+  SPIN_STEP_MS,
+  type ReelSymbol,
+} from "../data/mockData";
 
-const SPIN_DURATIONS = [1000, 1500, 2000, 2500];
-const SPIN_STEP_MS = 100;
-const SETTLE_DURATION_MS = 520;
-
-let spinInterval: ReturnType<typeof setInterval> | null = null;
-let stopTimeouts: ReturnType<typeof setTimeout>[] = [];
-let settleTimeouts: ReturnType<typeof setTimeout>[] = [];
+type ReelPhase = "idle" | "spinning" | "settling";
+type SpinResult = { type: "win" | "lose"; amount: number } | null;
 
 type SlotStore = {
   balance: number;
   bet: number;
   reels: ReelSymbol[];
-  spinningReels: boolean[];
-  settlingReels: boolean[];
+  reelPhases: ReelPhase[];
   spinning: boolean;
-  winAmount: number | null;
-  loseAmount: number | null;
+  result: SpinResult;
   totalLost: number;
   incrementBet: () => void;
   decrementBet: () => void;
-  getWinnings: (symbols: ReelSymbol[]) => number;
   spin: () => void;
-  clearSpinTimers: () => void;
   clearResult: () => void;
-  setBalance: (value: number | ((prev: number) => number)) => void;
-  setBet: (value: number | ((prev: number) => number)) => void;
-  setReels: (
-    value: ReelSymbol[] | ((prev: ReelSymbol[]) => ReelSymbol[]),
-  ) => void;
-  setSpinning: (value: boolean) => void;
-  setWinAmount: (value: number | null) => void;
-  setLoseAmount: (value: number | null) => void;
+  cleanup: () => void;
 };
 
-const createBoolArray = (length: number, value: boolean) =>
-  Array(length).fill(value);
+const createReelPhases = (phase: ReelPhase = "idle") =>
+  Array(REEL_STOP_DELAYS.length).fill(phase) as ReelPhase[];
+
+const randomSymbol = () =>
+  REEL_SYMBOLS[Math.floor(Math.random() * REEL_SYMBOLS.length)];
+
+const getWinnings = (bet: number, symbols: ReelSymbol[]) => {
+  if (symbols.length === 0) {
+    return 0;
+  }
+
+  const firstSymbol = symbols[0];
+  let matchCount = 1;
+
+  for (let index = 1; index < symbols.length; index += 1) {
+    if (symbols[index].id !== firstSymbol.id) {
+      break;
+    }
+
+    matchCount += 1;
+  }
+
+  if (matchCount === 4) {
+    return firstSymbol.jackpot ?? bet * firstSymbol.payoutMultiplier * 10;
+  }
+
+  if (matchCount === 3) {
+    return bet * firstSymbol.payoutMultiplier * 3;
+  }
+
+  if (matchCount === 2) {
+    return bet * 0.5;
+  }
+
+  return 0;
+};
+
+let spinInterval: ReturnType<typeof setInterval> | null = null;
+let stopTimeouts: ReturnType<typeof setTimeout>[] = [];
+let settleTimeouts: ReturnType<typeof setTimeout>[] = [];
+
+const clearSpinTimers = () => {
+  if (spinInterval) {
+    clearInterval(spinInterval);
+    spinInterval = null;
+  }
+
+  stopTimeouts.forEach(clearTimeout);
+  settleTimeouts.forEach(clearTimeout);
+  stopTimeouts = [];
+  settleTimeouts = [];
+};
 
 export const useSlotStore = create<SlotStore>((set, get) => ({
-  balance: 1000,
-  bet: 100,
-  reels: [REEL_SYMBOLS[0], REEL_SYMBOLS[0], REEL_SYMBOLS[0], REEL_SYMBOLS[0]],
-  spinningReels: [false, false, false, false],
-  settlingReels: [false, false, false, false],
+  balance: INITIAL_BALANCE,
+  bet: MIN_BET,
+  reels: Array.from({ length: REEL_STOP_DELAYS.length }, () => REEL_SYMBOLS[0]),
+  reelPhases: createReelPhases(),
   spinning: false,
-  winAmount: null,
-  loseAmount: null,
+  result: null,
   totalLost: 0,
   incrementBet: () =>
     set((state) => ({
       bet:
         state.bet < state.balance
-          ? Math.min(state.bet + 100, state.balance)
+          ? Math.min(state.bet + MIN_BET, state.balance)
           : state.bet,
     })),
   decrementBet: () =>
     set((state) => ({
-      bet: state.bet > 100 ? Math.max(state.bet - 100, 100) : state.bet,
+      bet:
+        state.bet > MIN_BET ? Math.max(state.bet - MIN_BET, MIN_BET) : state.bet,
     })),
-  getWinnings: (symbols) => {
-    if (symbols.length === 0) return 0;
-
-    const firstSymbol = symbols[0];
-    let matchCount = 1;
-
-    for (let index = 1; index < symbols.length; index += 1) {
-      if (symbols[index].id !== firstSymbol.id) {
-        break;
-      }
-
-      matchCount += 1;
-    }
-
-    const { bet } = get();
-
-    if (matchCount === 4) {
-      return firstSymbol.jackpot ?? bet * firstSymbol.payoutMultiplier * 10;
-    }
-
-    if (matchCount === 3) {
-      return bet * firstSymbol.payoutMultiplier * 3;
-    }
-
-    if (matchCount === 2) {
-      return bet * 0.5;
-    }
-
-    return 0;
-  },
   spin: () => {
-    const { balance, bet, reels, getWinnings, clearSpinTimers, spinning } =
-      get();
+    const { balance, bet, reels, spinning } = get();
 
     if (spinning || bet > balance) {
       return;
@@ -99,112 +109,75 @@ export const useSlotStore = create<SlotStore>((set, get) => ({
 
     clearSpinTimers();
 
-    const finalSymbols = [...reels];
+    const finalReels = [...reels];
     const stoppedReels = Array(reels.length).fill(false);
 
     set((state) => ({
       balance: state.balance - state.bet,
       spinning: true,
-      spinningReels: [true, true, true, true],
-      settlingReels: [false, false, false, false],
-      winAmount: null,
-      loseAmount: null,
+      reelPhases: createReelPhases("spinning"),
+      result: null,
     }));
 
     spinInterval = setInterval(() => {
       set((state) => ({
         reels: state.reels.map((symbol, index) =>
-          stoppedReels[index]
-            ? symbol
-            : REEL_SYMBOLS[Math.floor(Math.random() * REEL_SYMBOLS.length)],
+          stoppedReels[index] ? symbol : randomSymbol(),
         ),
       }));
     }, SPIN_STEP_MS);
 
-    stopTimeouts = SPIN_DURATIONS.map((duration, index) =>
+    stopTimeouts = REEL_STOP_DELAYS.map((delay, index) =>
       setTimeout(() => {
-        const finalSymbol =
-          REEL_SYMBOLS[Math.floor(Math.random() * REEL_SYMBOLS.length)];
-
-        finalSymbols[index] = finalSymbol;
+        const finalSymbol = randomSymbol();
+        finalReels[index] = finalSymbol;
         stoppedReels[index] = true;
 
         set((state) => ({
           reels: state.reels.map((symbol, reelIndex) =>
             reelIndex === index ? finalSymbol : symbol,
           ),
-          spinningReels: state.spinningReels.map((isSpinning, reelIndex) =>
-            reelIndex === index ? false : isSpinning,
-          ),
-          settlingReels: state.settlingReels.map((isSettling, reelIndex) =>
-            reelIndex === index ? true : isSettling,
+          reelPhases: state.reelPhases.map((phase, reelIndex) =>
+            reelIndex === index ? "settling" : phase,
           ),
         }));
 
-        const settleTimeout = setTimeout(() => {
-          set((state) => ({
-            settlingReels: state.settlingReels.map((isSettling, reelIndex) =>
-              reelIndex === index ? false : isSettling,
-            ),
-          }));
-        }, SETTLE_DURATION_MS);
+        settleTimeouts.push(
+          setTimeout(() => {
+            set((state) => ({
+              reelPhases: state.reelPhases.map((phase, reelIndex) =>
+                reelIndex === index ? "idle" : phase,
+              ),
+            }));
+          }, SETTLE_DURATION_MS),
+        );
 
-        settleTimeouts.push(settleTimeout);
-
-        if (index !== SPIN_DURATIONS.length - 1) {
+        if (index !== REEL_STOP_DELAYS.length - 1) {
           return;
         }
 
-        clearSpinTimers();
+        if (spinInterval) {
+          clearInterval(spinInterval);
+          spinInterval = null;
+        }
 
-        const winnings = getWinnings(finalSymbols);
-        const loseAmount = Math.max(bet - winnings, 0);
+        const winnings = getWinnings(bet, finalReels);
+        const lostAmount = Math.max(bet - winnings, 0);
 
         set((state) => ({
           balance: winnings > 0 ? state.balance + winnings : state.balance,
           spinning: false,
-          winAmount: winnings > 0 ? winnings : null,
-          loseAmount: loseAmount > 0 ? loseAmount : null,
-          totalLost: state.totalLost + loseAmount,
+          result:
+            winnings > 0
+              ? { type: "win", amount: winnings }
+              : lostAmount > 0
+                ? { type: "lose", amount: lostAmount }
+                : null,
+          totalLost: state.totalLost + lostAmount,
         }));
-      }, duration),
+      }, delay),
     );
   },
-  clearSpinTimers: () => {
-    if (spinInterval) {
-      clearInterval(spinInterval);
-      spinInterval = null;
-    }
-
-    stopTimeouts.forEach(clearTimeout);
-    stopTimeouts = [];
-
-    settleTimeouts.forEach(clearTimeout);
-    settleTimeouts = [];
-  },
-  clearResult: () =>
-    set({
-      winAmount: null,
-      loseAmount: null,
-    }),
-  setBalance: (value) =>
-    set((state) => ({
-      balance: typeof value === "function" ? value(state.balance) : value,
-    })),
-  setBet: (value) =>
-    set((state) => ({
-      bet: typeof value === "function" ? value(state.bet) : value,
-    })),
-  setReels: (value) =>
-    set((state) => ({
-      reels: typeof value === "function" ? value(state.reels) : value,
-    })),
-  setSpinning: (value) =>
-    set((state) => ({
-      spinning: value,
-      spinningReels: createBoolArray(state.reels.length, value),
-      settlingReels: createBoolArray(state.reels.length, false),
-    })),
-  setWinAmount: (value) => set({ winAmount: value }),
-  setLoseAmount: (value) => set({ loseAmount: value }),
+  clearResult: () => set({ result: null }),
+  cleanup: clearSpinTimers,
 }));

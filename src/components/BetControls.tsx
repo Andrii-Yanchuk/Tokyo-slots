@@ -1,3 +1,5 @@
+import { MIN_BET } from "../data/mockData";
+
 interface BetControlsProps {
   decrementBet: () => void;
   incrementBet: () => void;
@@ -6,8 +8,15 @@ interface BetControlsProps {
   balance: number;
 }
 
-export function BetControls(props: BetControlsProps) {
-  const { decrementBet, incrementBet, bet, spinning, balance } = props;
+export function BetControls({
+  decrementBet,
+  incrementBet,
+  bet,
+  spinning,
+  balance,
+}: BetControlsProps) {
+  const decrementDisabled = spinning || bet <= MIN_BET;
+  const incrementDisabled = spinning || bet >= balance;
 
   return (
     <div className="flex flex-col items-center gap-2">
@@ -15,7 +24,7 @@ export function BetControls(props: BetControlsProps) {
       <div className="flex items-center gap-2">
         <button
           onClick={decrementBet}
-          disabled={spinning || bet <= 100}
+          disabled={decrementDisabled}
           className="w-16 h-16 rounded-2xl border-2 border-[#341D1A] bg-[#FEFEFF] text-[#341D1A] text-xl font-bold flex items-center justify-center shadow-[0_6px_0_#515895] transition-all duration-100 active:translate-y-1.5 active:shadow-[0_0px_0_#515895] disabled:opacity-50 disabled:translate-y-1.5 disabled:shadow-[0_0px_0_#515895] cursor-pointer"
         >
           -
@@ -33,7 +42,7 @@ export function BetControls(props: BetControlsProps) {
 
         <button
           onClick={incrementBet}
-          disabled={spinning || bet >= balance}
+          disabled={incrementDisabled}
           className="w-16 h-16 rounded-2xl border-2 border-[#341D1A] bg-[#FEFEFF] text-[#341D1A] text-xl font-bold flex items-center justify-center shadow-[0_6px_0_#515895] transition-all duration-100 active:translate-y-1.5 active:shadow-[0_0px_0_#515895] disabled:opacity-50 disabled:translate-y-1.5 disabled:shadow-[0_0px_0_#515895] cursor-pointer"
         >
           +

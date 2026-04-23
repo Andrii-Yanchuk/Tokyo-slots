@@ -2,8 +2,7 @@ import { REEL_SYMBOLS, type ReelSymbol } from "../data/mockData";
 
 interface SlotMachineProps {
   reels: ReelSymbol[];
-  spinningReels: boolean[];
-  settlingReels: boolean[];
+  reelPhases: ("idle" | "spinning" | "settling")[];
   spin: () => void;
   spinning: boolean;
 }
@@ -20,7 +19,7 @@ function ReelSymbolImage({ symbol }: { symbol: ReelSymbol }) {
 }
 
 export function SlotMachine(props: SlotMachineProps) {
-  const { reels, spinningReels, settlingReels, spin, spinning } = props;
+  const { reels, reelPhases, spin, spinning } = props;
 
   const rodHeight = spinning ? 0 : 48;
 
@@ -33,7 +32,7 @@ export function SlotMachine(props: SlotMachineProps) {
               key={`${symbol.id}-${index}`}
               className="relative flex h-21 w-14 items-center justify-center overflow-hidden md:w-19 md:h-30"
             >
-              {spinningReels[index] ? (
+              {reelPhases[index] === "spinning" ? (
                 <div
                   className="absolute inset-x-0 top-0 w-full animate-[slot-reel-spin_280ms_linear_infinite] filter-[blur(0.8px)] will-change-[transform,filter]"
                   style={{
@@ -53,7 +52,7 @@ export function SlotMachine(props: SlotMachineProps) {
               ) : (
                 <div
                   className={`flex h-21 w-full items-center justify-center leading-none md:h-30 ${
-                    settlingReels[index]
+                    reelPhases[index] === "settling"
                       ? "animate-[slot-reel-bounce_520ms_cubic-bezier(0.18,0.9,0.24,1.2)] origin-[center_bottom]"
                       : ""
                   }`}

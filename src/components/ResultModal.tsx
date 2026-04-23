@@ -1,12 +1,13 @@
 interface Props {
   isClosing: boolean;
-  loseAmount: number | null;
-  winAmount: number | null;
+  result: {
+    type: "win" | "lose";
+    amount: number;
+  };
 }
 
-export function ResultModal({ isClosing, loseAmount, winAmount }: Props) {
-  const isWin = winAmount !== null;
-  const amount = winAmount ?? loseAmount;
+export function ResultModal({ isClosing, result }: Props) {
+  const isWin = result.type === "win";
   const overlayAnimationClass = isClosing
     ? "animate-[modal-overlay-out_220ms_ease-out_forwards]"
     : "animate-[modal-overlay-in_220ms_ease-out_forwards]";
@@ -16,10 +17,6 @@ export function ResultModal({ isClosing, loseAmount, winAmount }: Props) {
   const cardAnimationClass = isClosing
     ? "animate-[modal-card-out_220ms_ease-in_forwards]"
     : "animate-[modal-card-in_280ms_cubic-bezier(0.18,0.9,0.24,1.08)_forwards]";
-
-  if (amount === null) {
-    return null;
-  }
 
   return (
     <div
@@ -74,7 +71,7 @@ export function ResultModal({ isClosing, loseAmount, winAmount }: Props) {
               }`}
             >
               {isWin ? "+" : "-"}
-              {amount.toLocaleString()}
+              {result.amount.toLocaleString()}
             </span>
           </div>
         </div>

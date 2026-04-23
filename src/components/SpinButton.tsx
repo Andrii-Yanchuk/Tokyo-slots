@@ -5,9 +5,10 @@ interface Props {
   balance: number;
 }
 
-export function SpinButton(props: Props) {
-  const { spin, spinning, bet, balance } = props;
+export function SpinButton({ spin, spinning, bet, balance }: Props) {
   const disabled = spinning || bet > balance;
+  const pressedClass = spinning ? "translate-y-2.5" : "";
+  const clippedClass = spinning ? "[clip-path:inset(12px_0px_0px_0px)]" : "";
 
   return (
     <button
@@ -21,19 +22,19 @@ export function SpinButton(props: Props) {
       <img
         src="/part-3.png"
         alt="dark red part"
-        className={`absolute left-1/2 top-10 w-50 -translate-x-1/2 transition-[clip-path] duration-150 ease-out [clip-path:inset(0px_0px_0px_0px)] group-active:[clip-path:inset(12px_0px_0px_0px)] ${spinning ? "[clip-path:inset(12px_0px_0px_0px)]" : ""}`}
+        className={`absolute left-1/2 top-10 w-50 -translate-x-1/2 transition-[clip-path] duration-150 ease-out [clip-path:inset(0px_0px_0px_0px)] group-active:[clip-path:inset(12px_0px_0px_0px)] ${clippedClass}`}
       />
 
       <img
         src="/part-2.png"
         alt="red part"
-        className={`absolute -top-5 left-1/2 w-48.25 -translate-x-1/2 transition-transform duration-150 ease-out group-active:translate-y-2.5 ${spinning ? "translate-y-2.5" : ""}`}
+        className={`absolute -top-5 left-1/2 w-48.25 -translate-x-1/2 transition-transform duration-150 ease-out group-active:translate-y-2.5 ${pressedClass}`}
       />
 
       <img
         src="/spin.png"
         alt="spin"
-        className={`absolute top-0 left-1/2 w-30 -translate-x-1/2 transition-transform duration-150 ease-out group-active:translate-y-2.5 ${spinning ? "translate-y-2.5" : ""}`}
+        className={`absolute top-0 left-1/2 w-30 -translate-x-1/2 transition-transform duration-150 ease-out group-active:translate-y-2.5 ${pressedClass}`}
       />
 
       <img
