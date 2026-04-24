@@ -2,19 +2,35 @@ import {
   BALANCE_DECOR_IMAGE_SRC,
   BALANCE_MOBILE_DECOR,
 } from "../data/mockData";
+import { SpinButton } from "./SpinButton";
 
 interface BalanceProps {
   balance: number;
+  spin: () => void;
+  spinning: boolean;
+  bet: number;
 }
 
-export function Balance({ balance }: BalanceProps) {
+export function Balance({ balance, spin, spinning, bet }: BalanceProps) {
   return (
-    <footer className="relative mt-auto flex h-50 w-full flex-col items-center justify-end md:h-60">
-      <div className="hidden md:block absolute bottom-0 w-full h-60 bg-[url('/tokiocity.svg')] bg-size-[100%_100%] bg-repeat sm:bottom-20 lg:h-80 lg::bottom-27 pointer-events-none " />
+    <footer className="relative mt-auto flex h-67.5 w-full flex-col items-center justify-end overflow-x-clip">
+      {/* місто */}
+      <div className="pointer-events-none absolute bottom-0 z-0 h-32 w-full bg-[url('/tokiocity.svg')] bg-[length:140%_100%] bg-bottom md:h-60 md:bg-size-[100%_100%] sm:bottom-25 md:bg-repeat lg:h-80 lg:bottom-22" />
 
-      <div className="absolute inset-0 bg-[url('/cloud-mob.png')] bg-size-[100%_100%] bg-center bg-no-repeat z-10 md:bg-[url('/cloud-dt.png')] pointer-events-none" />
+      {/* хмари */}
+      <div className="pointer-events-none absolute inset-0 z-10 bg-[url('/cloud-mob.png')] bg-[length:100%_100%] bg-no-repeat sm:bg-[url('/cloud-dt.png')]" />
 
-      <div className="relative z-20 flex flex-col items-center justify-end">
+      {/* кнопка */}
+      <div className="absolute left-1/2 top-0 -translate-x-1/2">
+        <SpinButton
+          spin={spin}
+          spinning={spinning}
+          bet={bet}
+          balance={balance}
+        />
+      </div>
+
+      <div className="relative z-30 flex flex-col items-center justify-end">
         <p className="text text-4xl text-[#FFC434] -mb-4 z-20">Balance</p>
 
         <div className="md:hidden">

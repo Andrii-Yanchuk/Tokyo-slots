@@ -4,7 +4,6 @@ import { useSlotStore } from "./store/useSlotStore";
 import { SlotMachine } from "./components/SlotMachine";
 import { BetControls } from "./components/BetControls";
 import { Balance } from "./components/Balance";
-import { SpinButton } from "./components/SpinButton";
 import { ResultModal } from "./components/ResultModal";
 import { ReelDecor } from "./components/ReelDecor";
 import { RESULT_POPUP_TIMINGS } from "./data/mockData";
@@ -59,7 +58,7 @@ function App() {
   }, [clearResult, result]);
 
   return (
-    <div className="relative flex flex-col justify-center h-dvh">
+    <div className="relative flex min-h-[910px] h-dvh flex-col">
       <div className="zigzag"></div>
       <div className="absolute left-1/2 -translate-x-1/2 top-12 flex h-20 w-full max-w-93.75 items-center justify-center bg-[url('/label.webp')] bg-contain bg-center bg-no-repeat lg:top-12">
         <p className="text text-[#a5dff7] text-[28px] sm:text-5xl">
@@ -84,15 +83,9 @@ function App() {
           spinning={spinning}
           balance={balance}
         />
-        <SpinButton
-          spin={spin}
-          spinning={spinning}
-          bet={bet}
-          balance={balance}
-        />
       </div>
 
-      <Balance balance={balance} />
+      <Balance balance={balance} spin={spin} spinning={spinning} bet={bet} />
 
       {result && resultModalPhase && (
         <ResultModal

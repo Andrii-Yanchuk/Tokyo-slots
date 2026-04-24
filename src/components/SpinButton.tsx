@@ -15,7 +15,7 @@ export function SpinButton({ spin, spinning, bet, balance }: Props) {
       type="button"
       onClick={spin}
       disabled={disabled}
-      className="group z-10 relative mt-8 w-62.5 cursor-pointer select-none md:mt-18"
+      className="group relative z-10 w-62.5 cursor-pointer select-none"
     >
       <img src="/part-1.png" alt="light gray part" className="mx-auto w-60" />
 
