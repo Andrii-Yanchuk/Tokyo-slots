@@ -5,7 +5,7 @@ export type ReelSymbol = {
   jackpot?: number;
 };
 
-export const INITIAL_BALANCE = 1000;
+export const INITIAL_BALANCE = 100000;
 export const MIN_BET = 100;
 export const SPIN_STEP_MS = 100;
 export const REEL_STOP_DELAYS = [1000, 1500, 2000, 2500];
