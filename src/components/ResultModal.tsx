@@ -1,13 +1,15 @@
+import { RESULT_TYPES, type ResultType } from "../data/mockData";
+
 interface Props {
   isClosing: boolean;
   result: {
-    type: "win" | "lose";
+    type: ResultType;
     amount: number;
   };
 }
 
 export function ResultModal({ isClosing, result }: Props) {
-  const isWin = result.type === "win";
+  const isWin = result.type === RESULT_TYPES.win;
   const overlayAnimationClass = isClosing
     ? "animate-[modal-overlay-out_220ms_ease-out_forwards]"
     : "animate-[modal-overlay-in_220ms_ease-out_forwards]";

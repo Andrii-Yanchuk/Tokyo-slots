@@ -2,15 +2,17 @@ import { create } from "zustand";
 import {
   INITIAL_BALANCE,
   MIN_BET,
+  RESULT_TYPES,
   REEL_STOP_DELAYS,
   REEL_SYMBOLS,
   SETTLE_DURATION_MS,
   SPIN_STEP_MS,
+  type ResultType,
   type ReelSymbol,
 } from "../data/mockData";
 
 type ReelPhase = "idle" | "spinning" | "settling";
-type SpinResult = { type: "win" | "lose"; amount: number } | null;
+type SpinResult = { type: ResultType; amount: number } | null;
 
 type SlotStore = {
   balance: number;
@@ -169,9 +171,9 @@ export const useSlotStore = create<SlotStore>((set, get) => ({
           spinning: false,
           result:
             winnings > 0
-              ? { type: "win", amount: winnings }
+              ? { type: RESULT_TYPES.win, amount: winnings }
               : lostAmount > 0
-                ? { type: "lose", amount: lostAmount }
+                ? { type: RESULT_TYPES.lose, amount: lostAmount }
                 : null,
           totalLost: state.totalLost + lostAmount,
         }));

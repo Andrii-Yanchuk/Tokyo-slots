@@ -15,6 +15,11 @@ export const RESULT_POPUP_TIMINGS = {
   visible: 2000,
   exit: 220,
 };
+export const RESULT_TYPES = {
+  win: "win",
+  lose: "lose",
+} as const;
+export type ResultType = (typeof RESULT_TYPES)[keyof typeof RESULT_TYPES];
 export const BALANCE_DECOR_IMAGE_SRC = "/reels/sdsssd.png";
 export const BALANCE_MOBILE_DECOR = [
   "absolute h-11 w-11 bottom-4 -left-2",
