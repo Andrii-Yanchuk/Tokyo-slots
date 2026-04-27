@@ -32,33 +32,31 @@ function App() {
   }, [cleanup]);
 
   useEffect(() => {
-    if (!result) {
-      return;
-    }
+    if (!result) return;
 
-    const timeouts = [
-      setTimeout(() => {
-        setResultModalPhase("visible");
-      }, RESULT_POPUP_TIMINGS.delay),
-      setTimeout(() => {
-        setResultModalPhase("closing");
-      }, RESULT_POPUP_TIMINGS.delay + RESULT_POPUP_TIMINGS.visible),
+    const { delay, visible, exit } = RESULT_POPUP_TIMINGS;
+
+    const timers = [
+      setTimeout(() => setResultModalPhase("visible"), delay),
+
+      setTimeout(() => setResultModalPhase("closing"), delay + visible),
+
       setTimeout(
         () => {
           setResultModalPhase(null);
           clearResult();
         },
-        RESULT_POPUP_TIMINGS.delay +
-          RESULT_POPUP_TIMINGS.visible +
-          RESULT_POPUP_TIMINGS.exit,
+        delay + visible + exit,
       ),
     ];
 
-    return () => timeouts.forEach(clearTimeout);
-  }, [clearResult, result]);
+    return () => {
+      timers.forEach(clearTimeout);
+    };
+  }, [result, clearResult]);
 
   return (
-    <div className="relative flex min-h-[910px] h-dvh flex-col">
+    <div className="relative flex min-h-227.5 h-dvh flex-col">
       <div className="zigzag"></div>
       <div className="absolute left-1/2 -translate-x-1/2 top-12 flex h-20 w-full max-w-93.75 items-center justify-center bg-[url('/label.webp')] bg-contain bg-center bg-no-repeat lg:top-12">
         <p className="text text-[#a5dff7] text-[28px] sm:text-5xl">
