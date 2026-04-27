@@ -2,16 +2,17 @@ import { create } from "zustand";
 import {
   INITIAL_BALANCE,
   MIN_BET,
+  REEL_PHASES,
   RESULT_TYPES,
   REEL_STOP_DELAYS,
   REEL_SYMBOLS,
   SETTLE_DURATION_MS,
   SPIN_STEP_MS,
+  type ReelPhase,
   type ResultType,
   type ReelSymbol,
 } from "../data/mockData";
 
-type ReelPhase = "idle" | "spinning" | "settling";
 type SpinResult = { type: ResultType; amount: number } | null;
 
 type SlotStore = {
@@ -29,7 +30,7 @@ type SlotStore = {
   cleanup: () => void;
 };
 
-const createReelPhases = (phase: ReelPhase = "idle") =>
+const createReelPhases = (phase: ReelPhase = REEL_PHASES.idle) =>
   Array(REEL_STOP_DELAYS.length).fill(phase) as ReelPhase[];
 
 const randomSymbol = () =>
@@ -117,7 +118,7 @@ export const useSlotStore = create<SlotStore>((set, get) => ({
     set((state) => ({
       balance: state.balance - state.bet,
       spinning: true,
-      reelPhases: createReelPhases("spinning"),
+      reelPhases: createReelPhases(REEL_PHASES.spinning),
       result: null,
     }));
 
@@ -140,7 +141,7 @@ export const useSlotStore = create<SlotStore>((set, get) => ({
             reelIndex === index ? finalSymbol : symbol,
           ),
           reelPhases: state.reelPhases.map((phase, reelIndex) =>
-            reelIndex === index ? "settling" : phase,
+            reelIndex === index ? REEL_PHASES.settling : phase,
           ),
         }));
 
@@ -148,7 +149,7 @@ export const useSlotStore = create<SlotStore>((set, get) => ({
           setTimeout(() => {
             set((state) => ({
               reelPhases: state.reelPhases.map((phase, reelIndex) =>
-                reelIndex === index ? "idle" : phase,
+                reelIndex === index ? REEL_PHASES.idle : phase,
               ),
             }));
           }, SETTLE_DURATION_MS),

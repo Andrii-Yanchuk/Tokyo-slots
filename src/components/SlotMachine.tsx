@@ -1,8 +1,13 @@
-import { REEL_SYMBOLS, type ReelSymbol } from "../data/mockData";
+import {
+  REEL_PHASES,
+  REEL_SYMBOLS,
+  type ReelPhase,
+  type ReelSymbol,
+} from "../data/mockData";
 
 interface SlotMachineProps {
   reels: ReelSymbol[];
-  reelPhases: ("idle" | "spinning" | "settling")[];
+  reelPhases: ReelPhase[];
   spin: () => void;
   spinning: boolean;
 }
@@ -32,7 +37,7 @@ export function SlotMachine(props: SlotMachineProps) {
               key={`${symbol.id}-${index}`}
               className="relative flex h-21 w-14 items-center justify-center overflow-hidden md:w-19 md:h-30"
             >
-              {reelPhases[index] === "spinning" ? (
+              {reelPhases[index] === REEL_PHASES.spinning ? (
                 <div
                   className="absolute inset-x-0 top-0 w-full animate-[slot-reel-spin_280ms_linear_infinite] filter-[blur(0.8px)] will-change-[transform,filter]"
                   style={{
@@ -52,7 +57,7 @@ export function SlotMachine(props: SlotMachineProps) {
               ) : (
                 <div
                   className={`flex h-21 w-full items-center justify-center leading-none md:h-30 ${
-                    reelPhases[index] === "settling"
+                    reelPhases[index] === REEL_PHASES.settling
                       ? "animate-[slot-reel-bounce_520ms_cubic-bezier(0.18,0.9,0.24,1.2)] origin-[center_bottom]"
                       : ""
                   }`}

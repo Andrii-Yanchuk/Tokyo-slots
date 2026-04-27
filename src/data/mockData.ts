@@ -20,6 +20,12 @@ export const RESULT_TYPES = {
   lose: "lose",
 } as const;
 export type ResultType = (typeof RESULT_TYPES)[keyof typeof RESULT_TYPES];
+export const REEL_PHASES = {
+  idle: "idle",
+  spinning: "spinning",
+  settling: "settling",
+} as const;
+export type ReelPhase = (typeof REEL_PHASES)[keyof typeof REEL_PHASES];
 export const BALANCE_DECOR_IMAGE_SRC = "/reels/sdsssd.png";
 export const BALANCE_MOBILE_DECOR = [
   "absolute h-11 w-11 bottom-4 -left-2",
