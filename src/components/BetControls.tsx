@@ -15,17 +15,33 @@ export function BetControls({
   spinning,
   balance,
 }: BetControlsProps) {
-  const decrementDisabled = spinning || bet <= MIN_BET;
-  const incrementDisabled = spinning || bet >= balance;
+  const canDecrementBet = !spinning && bet > MIN_BET;
+  const canIncrementBet = !spinning && bet < balance;
+
+  const handleDecrementBet = () => {
+    if (!canDecrementBet) {
+      return;
+    }
+
+    decrementBet();
+  };
+
+  const handleIncrementBet = () => {
+    if (!canIncrementBet) {
+      return;
+    }
+
+    incrementBet();
+  };
 
   return (
     <div className="flex flex-col items-center gap-2">
       <span className="text text-[#a5dff7] text-lg">PLACE A BET</span>
       <div className="flex items-center gap-2">
         <button
-          onClick={decrementBet}
-          disabled={decrementDisabled}
-          className="w-16 h-16 rounded-2xl border-2 border-[#341D1A] bg-[#FEFEFF] text-[#341D1A] text-xl font-bold flex items-center justify-center shadow-[0_6px_0_#515895] transition-all duration-100 active:translate-y-1.5 active:shadow-[0_0px_0_#515895] disabled:opacity-50 disabled:translate-y-1.5 disabled:shadow-[0_0px_0_#515895] cursor-pointer"
+          onClick={handleDecrementBet}
+          disabled={!canDecrementBet}
+          className="w-16 h-16 rounded-2xl border-2 border-[#341D1A] bg-[#FEFEFF] text-[#341D1A] text-xl font-bold flex items-center justify-center shadow-[0_6px_0_#515895] transition-all duration-100 active:translate-y-1.5 active:shadow-[0_0px_0_#515895] disabled:opacity-50 disabled:translate-y-1.5 disabled:shadow-[0_0px_0_#515895] cursor-pointer disabled:cursor-not-allowed"
         >
           -
         </button>
@@ -41,9 +57,9 @@ export function BetControls({
         </div>
 
         <button
-          onClick={incrementBet}
-          disabled={incrementDisabled}
-          className="w-16 h-16 rounded-2xl border-2 border-[#341D1A] bg-[#FEFEFF] text-[#341D1A] text-xl font-bold flex items-center justify-center shadow-[0_6px_0_#515895] transition-all duration-100 active:translate-y-1.5 active:shadow-[0_0px_0_#515895] disabled:opacity-50 disabled:translate-y-1.5 disabled:shadow-[0_0px_0_#515895] cursor-pointer"
+          onClick={handleIncrementBet}
+          disabled={!canIncrementBet}
+          className="w-16 h-16 rounded-2xl border-2 border-[#341D1A] bg-[#FEFEFF] text-[#341D1A] text-xl font-bold flex items-center justify-center shadow-[0_6px_0_#515895] transition-all duration-100 active:translate-y-1.5 active:shadow-[0_0px_0_#515895] disabled:opacity-50 disabled:translate-y-1.5 disabled:shadow-[0_0px_0_#515895] cursor-pointer disabled:cursor-not-allowed"
         >
           +
         </button>
