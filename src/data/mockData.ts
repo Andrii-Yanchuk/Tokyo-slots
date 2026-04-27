@@ -26,7 +26,7 @@ export const REEL_PHASES = {
   settling: "settling",
 } as const;
 export type ReelPhase = (typeof REEL_PHASES)[keyof typeof REEL_PHASES];
-export const BALANCE_DECOR_IMAGE_SRC = "/reels/sdsssd.png";
+export const BALANCE_DECOR_IMAGE_SRC = "/reels/coin.png";
 export const BALANCE_MOBILE_DECOR = [
   "absolute h-11 w-11 bottom-4 -left-2",
   "absolute h-6 w-6 bottom-15 -left-11 rotate-60",
@@ -71,7 +71,7 @@ export const REEL_SYMBOLS: ReelSymbol[] = [
   },
   {
     id: "gem",
-    imageSrc: "/reels/sdsssd.png",
+    imageSrc: "/reels/coin.png",
     payoutMultiplier: 15,
   },
   {
