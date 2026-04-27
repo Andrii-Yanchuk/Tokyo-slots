@@ -1,121 +1,113 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import "./App.css";
+import { useEffect, useState } from "react";
+import { useShallow } from "zustand/react/shallow";
+import { useSlotStore } from "./store/useSlotStore";
+import { SlotMachine } from "./components/SlotMachine";
+import { BetControls } from "./components/BetControls";
+import { Balance } from "./components/Balance";
+import { ResultModal } from "./components/ResultModal";
+import { ReelDecor } from "./components/ReelDecor";
+import { RESULT_POPUP_TIMINGS } from "./data/mockData";
+
+type ResultModalPhase = "visible" | "closing" | null;
 
 function App() {
-  const [count, setCount] = useState(0)
+  const {
+    balance,
+    bet,
+    reels,
+    reelPhases,
+    spinning,
+    result,
+    incrementBet,
+    decrementBet,
+    spin,
+    cleanup,
+    clearResult,
+  } = useSlotStore(
+    useShallow((state) => ({
+      balance: state.balance,
+      bet: state.bet,
+      reels: state.reels,
+      reelPhases: state.reelPhases,
+      spinning: state.spinning,
+      result: state.result,
+      incrementBet: state.incrementBet,
+      decrementBet: state.decrementBet,
+      spin: state.spin,
+      cleanup: state.cleanup,
+      clearResult: state.clearResult,
+    })),
+  );
+  const [resultModalPhase, setResultModalPhase] =
+    useState<ResultModalPhase>(null);
+
+  useEffect(() => {
+    return cleanup;
+  }, [cleanup]);
+
+  useEffect(() => {
+    if (!result) return;
+
+    const { delay, visible, exit } = RESULT_POPUP_TIMINGS;
+
+    const timers = [
+      setTimeout(() => setResultModalPhase("visible"), delay),
+
+      setTimeout(() => setResultModalPhase("closing"), delay + visible),
+
+      setTimeout(
+        () => {
+          setResultModalPhase(null);
+          clearResult();
+        },
+        delay + visible + exit,
+      ),
+    ];
+
+    return () => {
+      timers.forEach(clearTimeout);
+    };
+  }, [result, clearResult]);
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="relative flex min-h-227.5 h-dvh flex-col">
+      <div className="zigzag"></div>
+      <div className="absolute left-1/2 -translate-x-1/2 top-12 flex h-20 w-full max-w-93.75 items-center justify-center bg-[url('/label.webp')] bg-contain bg-center bg-no-repeat lg:top-12">
+        <p className="text text-[#a5dff7] text-[28px] sm:text-5xl">
+          Tokyo Slots
+        </p>
+      </div>
 
-      <div className="ticks"></div>
+      <div className="relative flex w-full mt-34 flex-col items-center gap-6 ">
+        <SlotMachine
+          reels={reels}
+          reelPhases={reelPhases}
+          spin={spin}
+          spinning={spinning}
+        />
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+        <ReelDecor />
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+        <BetControls
+          decrementBet={decrementBet}
+          incrementBet={incrementBet}
+          bet={bet}
+          spinning={spinning}
+          balance={balance}
+        />
+      </div>
+
+      <Balance balance={balance} spin={spin} spinning={spinning} bet={bet} />
+
+      {result && resultModalPhase && (
+        <ResultModal
+          isClosing={resultModalPhase === "closing"}
+          result={result}
+        />
+      )}
+    </div>
+  );
 }
 
-export default App
+export default App;
