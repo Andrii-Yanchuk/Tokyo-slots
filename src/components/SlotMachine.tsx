@@ -73,7 +73,7 @@ export function SlotMachine(props: SlotMachineProps) {
         </div>
       </div>
 
-      <div
+      <button
         className={`
           cursor-pointer relative h-20 w-10 -ml-5 md:-ml-14
         `}
@@ -98,7 +98,7 @@ export function SlotMachine(props: SlotMachineProps) {
             }}
           />
         </div>
-      </div>
+      </button>
     </div>
   );
 }
