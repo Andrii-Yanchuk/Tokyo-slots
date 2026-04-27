@@ -1,5 +1,6 @@
 import "./App.css";
 import { useEffect, useState } from "react";
+import { useShallow } from "zustand/react/shallow";
 import { useSlotStore } from "./store/useSlotStore";
 import { SlotMachine } from "./components/SlotMachine";
 import { BetControls } from "./components/BetControls";
@@ -23,7 +24,21 @@ function App() {
     spin,
     cleanup,
     clearResult,
-  } = useSlotStore();
+  } = useSlotStore(
+    useShallow((state) => ({
+      balance: state.balance,
+      bet: state.bet,
+      reels: state.reels,
+      reelPhases: state.reelPhases,
+      spinning: state.spinning,
+      result: state.result,
+      incrementBet: state.incrementBet,
+      decrementBet: state.decrementBet,
+      spin: state.spin,
+      cleanup: state.cleanup,
+      clearResult: state.clearResult,
+    })),
+  );
   const [resultModalPhase, setResultModalPhase] =
     useState<ResultModalPhase>(null);
 
